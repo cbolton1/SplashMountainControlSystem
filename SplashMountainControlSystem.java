@@ -1,12 +1,10 @@
-
 public class SplashMountainControlSystem {
 
 	public static int N = 5; //number of seats on a log
-	public static int M = 10; //number of passengers available
+	public static int M = 20; //number of passengers available
 	
 	public static void main(String[] args) {
-		//TODO:
-		//create log with n seats and make sure it is clean
+		//create log with n seats
 		Log log1 = new Log();
 		log1.initilizeLog(N);
 		
@@ -17,24 +15,34 @@ public class SplashMountainControlSystem {
 			arrPassenger[i] = new Passenger(i);
 		}
 		
-		//if log is empty, it will be cleaned before the passengers can board
-		if(log1.getLogFull()){
-			log1.clean = false;
-			System.out.println("Log dirty");
-		}else{
-			log1.cleanLog();
-			//System.out.println("Log clean");
-			//after log is cleaned start boarding
-			for(int i = 0;i<N;i++){
-				arrPassenger[i].board(log1);
-			}
-			log1.ride();
-			//Then riders get off
-			for(int i = 0;i<N;i++){
-				arrPassenger[i].disembark(log1);
+		//Loop through the passengers so they all get a turn
+		int inLine = M-1;
+		while(inLine>-1){
+			
+			//if log is empty, it will be cleaned before the passengers can board
+			if(log1.getLogFull()){
+				log1.clean = false;
+				System.out.println("Log dirty");
+			}else{
+				log1.cleanLog();
+				//after log is cleaned start boarding
+				for(int i = 0;i<N;i++){
+					arrPassenger[inLine].board(log1);
+					System.out.println("by passenger " + inLine);
+					inLine--;
+				}
+				log1.ride();
+				//Then riders get off
+				for(int i = 0;i<N;i++){
+					arrPassenger[i].disembark(log1);
+				}
+				
 			}
 			
+			
+			
 		}
+		
 
 	}
 
