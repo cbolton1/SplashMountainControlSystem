@@ -1,10 +1,11 @@
 public class SplashMountainControlSystem {
 
-	public static int N = 5; //number of seats on a log
-	public static int M = 20; //number of passengers available
+	public static int N = 6; //number of seats on a log
+	public static int M = 10; //number of passengers available
 	
 	public static void main(String[] args) {
-		//create log with n seats
+		//TODO:
+		//create log with n seats and make sure it is clean
 		Log log1 = new Log();
 		log1.initilizeLog(N);
 		
@@ -26,7 +27,7 @@ public class SplashMountainControlSystem {
 			}else{
 				log1.cleanLog();
 				//after log is cleaned start boarding
-				for(int i = 0;i<N;i++){
+				for(int i = 0;i<N && inLine>-1;i++){
 					arrPassenger[inLine].board(log1);
 					System.out.println("by passenger " + inLine);
 					inLine--;
