@@ -1,4 +1,3 @@
-package cis461.project;
 
 /**
  * CIS 461 Project
