@@ -1,16 +1,23 @@
-const N = 5
-const M = 10
-range LOGFULL = 0..N
-range PEOPLE = 1..M
-range CLEAN = 0..1
+set High = {high[1..2]}
+set Low = {low[1..2]}
+set PEOPLE = {High, Low}
+const SEATS = 2
+const M = 4
+range T = 1..M
 
+LOG = (clean -> ride -> LOG).
+PASSENGER = (ticket[t:T] -> board[t] -> disembark -> PASSENGER).
 
-LOG = LOG[0][1],
-LOG[i:LOGFULL][c:CLEAN] = (when(i < N && c==1) passenger[PEOPLE].board -> LOG[i+1][1]
-				| when(i == N) passenger[PEOPLE].ride -> LOG[i][0]
-				| when(i > 0 && c==0) passenger[PEOPLE].disembark -> LOG[i-1][0]
-				| when(i == 0 && c==0) clean -> LOG[0][1]).
+TICKET = TICKET[1],
+TICKET[t:T] = (ticket[t] -> TICKET[t%M+1]).
+CONTROL = (clean -> ENTER[0][1]),
+ENTER[i:0..SEATS][t:T]=
+	(when(i<SEATS) board[t] -> ENTER[i+1][t%M+1]
+	|when (i==SEATS) ride -> EXIT[SEATS][t]),
+EXIT[i:1..SEATS][t:T] =
+	( when (i>1) disembark -> EXIT[i-1][t]
+	| when (i==1) disembark -> clean -> ENTER[0][t]).
 
-PASSENGER = (board -> ride -> disembark -> STOP).
-
-||LOGRIDE = (LOG || passenger[PEOPLE]:PASSENGER) << {passenger[PEOPLE].ride}.
+||LOGRIDE = (LOG || PEOPLE:PASSENGER || PEOPLE::TICKET || PEOPLE::CONTROL/{ride/PEOPLE.ride,clean/PEOPLE.clean}) >>{Low.board[T]}.
+progress HIGH = {High.board[T]}
+progress LOW = {Low.board[T]}
